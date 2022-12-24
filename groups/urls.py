@@ -3,5 +3,6 @@ from . import views
 
 
 urlpatterns = [
-    path('<str:group>/users', views.users_of_group)
+    path('<str:group>/users', views.GetCreateUserGroups.as_view()),
+    path('<str:group>/users/<int:userId>', views.DeleteUserFromGroup.as_view())
 ]
