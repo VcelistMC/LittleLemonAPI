@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
-    path('api/groups', include('groups.urls'))
+    path('api/users/me', include('core.urls')),
+    path('api/groups/', include('groups.urls')),
 ]

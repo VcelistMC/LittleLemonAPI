@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.base)
+    path('<str:group>/users', views.users_of_group)
 ]
