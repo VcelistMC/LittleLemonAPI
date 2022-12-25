@@ -5,20 +5,16 @@ from django.contrib.auth.models import Group
 from core.models import LittleLemonUser
 from core.serializers import LittleLemonUserSerializer
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
-from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
+from core.permissions import ReadOnlyForNonManager
 
 from core.models import UserGroups
 
-class IsManager(BasePermission):
-    def has_permission(self, request, view):
-        currentUser = LittleLemonUser.objects.get(pk=request.user.id)
-        return currentUser.belongsToGroup(UserGroups.MANAGER)
 
-            
 class GetCreateUserGroups(ListCreateAPIView, DestroyAPIView):
     queryset = LittleLemonUser
     serializer_class = LittleLemonUserSerializer
-    permission_classes = [IsManager, IsAuthenticated]
+    permission_classes = [IsAuthenticated, ReadOnlyForNonManager]
 
     def list(self, request, *args, **kwargs):
         group = kwargs['group']
@@ -44,7 +40,7 @@ class GetCreateUserGroups(ListCreateAPIView, DestroyAPIView):
 class DeleteUserFromGroup(DestroyAPIView):
     queryset = LittleLemonUser
     serializer_class = LittleLemonUserSerializer
-    permission_classes = [IsManager, IsAuthenticated]
+    permission_classes = [IsAuthenticated, ReadOnlyForNonManager]
 
     def destroy(self, request, *args, **kwargs):
         userIdToDelete = kwargs['userId']

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'djoser',
     'core',
     'groups',
+    'menu'
 ]
 
 MIDDLEWARE = [
