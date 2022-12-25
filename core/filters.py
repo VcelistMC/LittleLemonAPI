@@ -65,19 +65,16 @@ class BaseFilter:
 
         return self.params
 
-    def _get_from_request(self, kwargs, serialized_property, required):
-        value_from_req = kwargs.get(serialized_property, None)
-        if required:
-            assert value_from_req is not None, f'{serialized_property} is required'
-        
-        return value_from_req
+    def _get_from_request(self, kwargs, serialized_property):
+
+        return kwargs.get(serialized_property, None)
         
     def parse_params(self, kwargs):
         parsed_params = {}
         
         params = self._get_params()
         for db_property, serialized_property in params.items():
-            val = self._get_from_request(kwargs, serialized_property, False)
+            val = self._get_from_request(kwargs, serialized_property)
             if val is None: continue
 
             parsed_params[db_property] = val
@@ -87,7 +84,6 @@ class BaseFilter:
 
 
     def filter(self, kwargs):
-        self._hasError = False
         queryset = self.get_queryset()
         parsed_params = self.parse_params(kwargs)
 
