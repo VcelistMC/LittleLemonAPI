@@ -1,14 +1,13 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import Category, MenuItem
 
-class CategorySerializer(ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
 
 
-class MenuItemSerializer(ModelSerializer):
+class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
         fields = '__all__'
-        depth = 1
