@@ -11,3 +11,4 @@ class MenuItemSerializer(ModelSerializer):
     class Meta:
         model = MenuItem
         fields = '__all__'
+        depth = 1
