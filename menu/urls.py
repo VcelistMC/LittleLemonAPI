@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     path('categories', views.categoryViewSet),
-    path('categories/<int:pk>', views.categorySingleOperations)
+    path('categories/<int:pk>', views.categorySingleOperations),
+    path('', views.menuViewSet),
 ]
