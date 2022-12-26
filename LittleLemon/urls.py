@@ -22,5 +22,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('api/users/me', include('core.urls')),
     path('api/groups/', include('groups.urls')),
-    path('api/menu/', include('menu.urls'))
+    path('api/menu/', include('menu.urls')),
+    path('api/cart/', include('cart.urls')),
 ]
