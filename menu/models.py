@@ -12,3 +12,6 @@ class MenuItem(models.Model):
     basePrice = models.DecimalField(decimal_places=2, max_digits=4)
     stock = models.IntegerField(max_length=3)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
+
+    def __str__(self) -> str:
+        return self.title

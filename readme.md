@@ -21,12 +21,15 @@
 | `/api/groups/delivery-crew/users/{userId}` | Manager | DELETE | Removes this user from the manager group and returns 200 – Success if everything is okay. If the user is not found, returns                            | 404 – Not found |
 
 # Cart
-| Endpoint             | Role     | Method | Purpose                                                                                         |
-|----------------------|----------|--------|-------------------------------------------------------------------------------------------------|
-| `/api/cart/items` | Customer | GET    | Returns current items in the cart for the current user token                                    |
-| `/api/cart/items/{id}` | Customer | GET    | Returns item in the cart for the current user token                                    |
-| `/api/cart/items` | Customer | POST   | Adds the menu item to the cart. Sets the authenticated user as the user id for these cart items |
-| `/api/cart/items` | Customer | DELETE | Deletes all menu items created by the current user token                                        |
+| Endpoint | Role | Method | Purpose |
+|---|---|---|---|
+| `cart/` | Manager | GET | List all carts |
+| `cart/me` | ALL | GET | get cart for current user |
+| `cart/me/items` | ALL | POST | adds an item to current user cart |
+| `cart/me/items/{itemId}` | ALL | GET, DELETE, PATCH | gets, patches or deletes an item from current user cart |
+| `cart/{cartId}` | Manager | GET | get cart of cart id |
+| `cart/{cartId}/items` | Manager | POST | adds an item to user cart |
+| `cart/{cartId}/items/{itemId}` | Manager | GET, DELETE, PATCH | gets, patches or deletes an item from user cart | cart |                                       |
 
 # Orders
 | Endpoint              | Role          | Method     | Purpose                                                                                                                                                                                                                                                                                                                                               |
