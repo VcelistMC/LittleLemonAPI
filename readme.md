@@ -25,7 +25,7 @@
 |---|---|---|---|
 | `cart/` | Manager | GET | List all carts |
 | `cart/me` | ALL | GET | get cart for current user |
-| `cart/me/items` | ALL | POST | adds an item to current user cart |
+| `cart/me/items` | ALL | GET, POST | lists all items or adds an item to current user cart |
 | `cart/me/items/{itemId}` | ALL | GET, DELETE, PATCH | gets, patches or deletes an item from current user cart |
 | `cart/{cartId}` | Manager | GET | get cart of cart id |
 | `cart/{cartId}/items` | Manager | POST | adds an item to user cart |

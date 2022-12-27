@@ -8,4 +8,8 @@ class ReadOnlyForNonManager(BasePermission):
         currentUser = LittleLemonUser.objects.get(pk=request.user.id)
         return currentUser.belongsToGroup(UserGroups.MANAGER)
 
-            
+
+class IsManager(BasePermission):
+    def has_permission(self, request, view):
+        currentUser = LittleLemonUser.objects.get(pk=request.user.id)
+        return currentUser.belongsToGroup(UserGroups.MANAGER) 
