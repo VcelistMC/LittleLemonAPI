@@ -3,7 +3,7 @@ from menu.models import MenuItem
 from core.models import LittleLemonUser
 
 class Cart(models.Model):
-    userId = models.ForeignKey(LittleLemonUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(LittleLemonUser, on_delete=models.CASCADE)
 
     @property
     def cartTotal(self):
@@ -15,7 +15,7 @@ class Cart(models.Model):
         return total
 
     def __str__(self) -> str:
-        return self.userId.username + "'s Cart"
+        return self.user.username + "'s Cart"
 
 
 class CartItem(models.Model):
