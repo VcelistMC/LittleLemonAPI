@@ -2,35 +2,33 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from cart.models import Cart, CartItem
-from core.models import LittleLemonUser
 from menu.models import MenuItem
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
-        fields = ['quantity', 'menuItem']
+        fields = ['quantity','total', 'menuItem']
+        depth=1
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, source='cart')
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ['user', 'cartTotal', 'items']
 
     @staticmethod
     def serialize(cart, many=False):
         cartSerializer = CartSerializer(cart, many)
         cartSerializer.is_valid()
-        return cartSerializer.data
+        print(cartSerializer)
+        return cartSerializer.validated_data
 
 class CartItemPostRequestSerializer(serializers.Serializer):
     itemId = serializers.IntegerField(required=True)
     quantity = serializers.IntegerField(required=True)
 
     def validate_itemId(self, id):
-        v = get_object_or_404(MenuItem, pk=id)
-        print(v)
-        if v is MenuItem.DoesNotExist:
-            raise serializers.ValidationError("Menu item not found")
+        get_object_or_404(MenuItem, pk=id)
 
         return id
 

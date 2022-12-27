@@ -18,14 +18,12 @@ class AllCartsView(ListCreateAPIView):
 
 list_create_cart_view = AllCartsView.as_view()
 
-class OwnCartView(RetrieveAPIView):
+class OwnCartView(APIView):
     queryset = Cart.objects.all()
-    serializer_class = CartSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        currentUser = LittleLemonUser.objects.get(pk=request.user.id)
-        currentUserCart = Cart.objects.get_or_create(user = currentUser)
+        currentUserCart, _ = Cart.objects.get_or_create(user__pk = request.user.id)
         return Response(CartSerializer.serialize(currentUserCart))
 
 own_cart_view = OwnCartView.as_view()
@@ -42,7 +40,6 @@ class OwnCartItemsView(APIView):
 
     def post(self, request, *args, **kwargs):
         dto = CartItemPostRequestSerializer(data= request.data)
-
         if not dto.is_valid():
             return Response(dto.errors, status=400)
         
