@@ -1,7 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 
-from cart.models import Cart
-from cart.serializers import CartSerializer
+from cart.models import Cart, CartItem
+from cart.serializers import CartItemPostRequestSerializer, CartItemSerializer, CartSerializer
 from core.models import LittleLemonUser
 from core.permissions import IsManager
 from rest_framework.permissions import IsAuthenticated
@@ -28,3 +28,21 @@ class OwnCartView(RetrieveAPIView):
         return Response(CartSerializer.serialize(currentUserCart))
 
 own_cart_view = OwnCartView.as_view()
+
+
+class OwnCartItemsView(ListCreateAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemPostRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        cartItems = CartItem.objects.filter(cart__userId=request.user.id)
+        seri = CartItemSerializer(cartItems, many=True)
+        return Response(seri.data)
+
+    def post(self, request, *args, **kwargs):
+        s = CartItemPostRequestSerializer(data=request.data)
+        s.is_valid(raise_exception=True)
+        s.save()
+        print(s.validated_data)
+own_cart_items_view = OwnCartItemsView.as_view()

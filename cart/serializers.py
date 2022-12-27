@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
 from cart.models import Cart, CartItem
+from menu.models import MenuItem
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ['quantity', 'menuItem']
-        depth = 1
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, source='cart')
@@ -19,3 +19,12 @@ class CartSerializer(serializers.ModelSerializer):
         cartSerializer = CartSerializer(cart, many)
         cartSerializer.is_valid()
         return cartSerializer.data
+
+class CartItemPostRequestSerializer(serializers.ModelSerializer):
+    menuItem = serializers.PrimaryKeyRelatedField(required=True, queryset=MenuItem.objects.all())
+    quantity = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = CartItem
+        fields = ['quantity', 'menuItem']
+
