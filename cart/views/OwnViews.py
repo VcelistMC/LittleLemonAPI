@@ -33,7 +33,7 @@ class OwnCartItemsView(APIView):
         
         createdItem = dto.save(request.user.id)
 
-        return Response({CartItemSerializer.serialize(createdItem)}, status=201)
+        return Response(CartItemSerializer.serialize(createdItem), status=201)
 
 
 

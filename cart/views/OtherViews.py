@@ -32,9 +32,11 @@ class CartItemsView(ListCreateAPIView):
         if not dto.is_valid():
             return Response(dto.errors, status=400)
         
-        createdItem = dto.save(kwargs['cartId'])
+        cart = get_object_or_404(Cart, pk=kwargs['cartId'])
 
-        return Response(CartItemSerializer.serialize(createdItem), status=201)
+        createdItem = dto.save(cart.user.pk)
+
+        return Response({CartItemSerializer.serialize(createdItem)}, status=201)
 
 
 class CartItemsSingleOpsView(MultipleLookUpFieldMixin, RetrieveUpdateDestroyAPIView):
