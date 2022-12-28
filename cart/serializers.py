@@ -10,6 +10,11 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = ['id', 'quantity', 'total', 'menuItem']
         depth=1
 
+    @staticmethod
+    def serialize(item, many=False):
+        itemSerial = CartItemSerializer(item, many=many)
+        return itemSerial.data
+
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, source='cart')
     class Meta:
@@ -18,9 +23,8 @@ class CartSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def serialize(cart, many=False):
-        cartSerializer = CartSerializer(cart, many)
-        cartSerializer.is_valid()
-        return cartSerializer.validated_data
+        cartSerializer = CartSerializer(cart, many=many)
+        return cartSerializer.data
 
 class CartItemPostRequestSerializer(serializers.Serializer):
     itemId = serializers.IntegerField(required=True)
@@ -38,7 +42,10 @@ class CartItemPostRequestSerializer(serializers.Serializer):
         item = MenuItem.objects.get(pk=_itemId)
         currentCart, _ = Cart.objects.get_or_create(user__id=userId)
 
-        return CartItem(cart=currentCart, menuItem=item, quantity=_quantity).save()
+        createdItem = CartItem(cart=currentCart, menuItem=item, quantity=_quantity)
+        createdItem.save()
+
+        return createdItem
 
     
 
