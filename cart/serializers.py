@@ -7,7 +7,7 @@ from menu.models import MenuItem
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
-        fields = ['quantity','total', 'menuItem']
+        fields = ['id', 'quantity', 'total', 'menuItem']
         depth=1
 
 class CartSerializer(serializers.ModelSerializer):
@@ -20,7 +20,6 @@ class CartSerializer(serializers.ModelSerializer):
     def serialize(cart, many=False):
         cartSerializer = CartSerializer(cart, many)
         cartSerializer.is_valid()
-        print(cartSerializer)
         return cartSerializer.validated_data
 
 class CartItemPostRequestSerializer(serializers.Serializer):
@@ -35,7 +34,6 @@ class CartItemPostRequestSerializer(serializers.Serializer):
     def save(self, userId):
         _itemId = self.validated_data['itemId']
         _quantity = self.validated_data['quantity']
-        print(self.validated_data)
 
         item = MenuItem.objects.get(pk=_itemId)
         currentCart, _ = Cart.objects.get_or_create(user__id=userId)

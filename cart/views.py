@@ -1,4 +1,4 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 
 from cart.models import Cart, CartItem
@@ -48,3 +48,12 @@ class OwnCartItemsView(APIView):
         return Response({"done": "bibi"})
 
 own_cart_items_view = OwnCartItemsView.as_view()
+
+
+class OwnCartItemSingleOpsView(RetrieveUpdateDestroyAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [IsAuthenticated]
+
+own_cart_item_single_ops_view = OwnCartItemSingleOpsView.as_view()
+
