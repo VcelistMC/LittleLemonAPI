@@ -6,6 +6,8 @@ from cart.serializers import CartItemSerializer, CartSerializer, CartItemPostReq
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from core.mixins import MultipleLookUpFieldMixin
+
 class OwnCartView(APIView):
     queryset = Cart.objects.all()
     permission_classes = [IsAuthenticated]
@@ -35,7 +37,12 @@ class OwnCartItemsView(APIView):
 
 
 
-class OwnCartItemSingleOpsView(RetrieveUpdateDestroyAPIView):
+class OwnCartItemSingleOpsView(MultipleLookUpFieldMixin,  RetrieveUpdateDestroyAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [IsAuthenticated]
+    lookup_fields = [('userId', 'cart__user__pk'), ('pk', 'pk')]
+
+    def get_object(self):
+        self.kwargs['userId'] = self.request.user.id
+        return super().get_object()
