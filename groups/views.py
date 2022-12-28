@@ -1,22 +1,20 @@
-import json
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import Group
 from core.models import LittleLemonUser
 from core.serializers import LittleLemonUserSerializer
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from core.permissions import ReadOnlyForNonManager
+from core.permissions import IsManager, ReadOnlyForNonManager
 
 from core.models import UserGroups
 
 
-class GetCreateUserGroups(ListCreateAPIView, DestroyAPIView):
-    queryset = LittleLemonUser
-    serializer_class = LittleLemonUserSerializer
-    permission_classes = [IsAuthenticated, ReadOnlyForNonManager]
+class GetCreateUserGroups(APIView):
+    queryset = LittleLemonUser.objects.all()
+    permission_classes = [IsManager]
 
-    def list(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         group = kwargs['group']
         usersInGroup = LittleLemonUser.objects.filter(groups__name=group)
         return Response(LittleLemonUserSerializer.serialize(usersInGroup, True))
@@ -37,10 +35,9 @@ class GetCreateUserGroups(ListCreateAPIView, DestroyAPIView):
         return Response({"detail": f'{selectedUser.username} added to {group}'}, status=201)
 
 
-class DeleteUserFromGroup(DestroyAPIView):
+class DeleteUserFromGroup(APIView):
     queryset = LittleLemonUser
-    serializer_class = LittleLemonUserSerializer
-    permission_classes = [IsAuthenticated, ReadOnlyForNonManager]
+    permission_classes = [IsManager]
 
     def destroy(self, request, *args, **kwargs):
         userIdToDelete = kwargs['userId']
