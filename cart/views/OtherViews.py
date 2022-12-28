@@ -1,5 +1,4 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.views import APIView
 
 from cart.models import Cart, CartItem
 from cart.serializers import CartItemSerializer, CartSerializer, CartItemPostRequestSerializer
