@@ -5,7 +5,7 @@ from cart.models import Cart, CartItem
 from cart.serializers import CartItemSerializer, CartSerializer, CartItemPostRequestSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
+from rest_framework.pagination import LimitOffsetPagination
 from core.mixins import MultipleLookUpFieldMixin
 
 class OwnCartView(APIView):
@@ -21,6 +21,7 @@ class OwnCartView(APIView):
 class OwnCartItemsView(APIView):
     queryset = CartItem.objects.all()
     permission_classes = [IsAuthenticated]
+    pagination_class = LimitOffsetPagination
 
     def get(self, request, *args, **kwargs):
         cartItems = CartItem.objects.filter(cart__user=request.user.id)

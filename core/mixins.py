@@ -27,3 +27,20 @@ class MultipleLookUpFieldMixin(object):
         self.check_object_permissions(self.request, obj)
         return obj
 
+class FilterMixin(object):
+    filter_fields = {}
+
+    def filter_queryset(self, queryset):
+        filters = {}
+        for urlParam, dbParam in self.filter_fields.items():
+            assert type(urlParam) is str, f'{urlParam} must be of type str'
+            assert type(dbParam) is str, f'{dbParam} must be of type str'
+
+            urlValue = self.request.GET.get(urlParam, None)
+            if urlValue is None: continue
+
+            filters[dbParam] = urlValue
+        
+        print(filters, self.filter_fields, self.request.GET)
+
+        return queryset.filter(**filters)
