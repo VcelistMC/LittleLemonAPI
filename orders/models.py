@@ -12,7 +12,7 @@ class OrderStatus(models.TextChoices):
 
 class Order(models.Model):
     customer = models.ForeignKey(LittleLemonUser, on_delete=models.CASCADE, related_name='customer')
-    delivery_crew = models.ForeignKey(LittleLemonUser, on_delete=models.SET_NULL, null=True, related_name='delivery_crew')
+    delivery_crew = models.ForeignKey(LittleLemonUser, on_delete=models.SET_NULL, null=True, related_name='delivery_crew', default=None)
     status = models.CharField(
         max_length=15,
         choices=OrderStatus.choices,
