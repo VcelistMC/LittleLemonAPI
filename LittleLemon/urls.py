@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    path('schema/', get_schema_view(title="Schema", description="Test"), name='api_schema'),
+    path('schema/', get_schema_view(title="Schema", description="Test",), name='api_schema'),
     path('docs/', TemplateView.as_view(
         template_name='docs.html',
         extra_context={'schema_url': 'api_schema'},
