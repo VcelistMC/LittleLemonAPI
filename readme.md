@@ -7,7 +7,7 @@ You can either use pipenv to install the required packages by running
 ```
 pip install requirements.txt
 ```
-or you can use pipenv by running
+or you can use pip by running
 ```
 pipenv install
 ```
@@ -46,7 +46,7 @@ The baseurl for all the endpoints is `{hostUrl}/api`
 | `/api/groups/delivery-crew/users` | Manager | POST | Assigns the user in the payload to delivery crew group and returns 201-Created HTTP |
 | `/api/groups/delivery-crew/users/{userId}` | Manager | DELETE | Removes this user from the manager group and returns 200 – Success if everything is okay. If the user is not found |
                           
-# Cart
+### Cart
 | Endpoint | Role | Method | Purpose |
 |---|---|---|---|
 | `/cart/` | Manager | GET | List all carts |
