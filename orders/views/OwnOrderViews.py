@@ -18,13 +18,15 @@ class OwnOrdersGetCreateView(APIView):
     def deleteRelatedCartItems(self, items):
         for item in items:
             item.delete()
-        print("All items deleted")
 
     def post(self, request, *args, **kwargs):
         currentUser = request.user
 
-        newOrder = Order(customer=currentUser)
         currentCartItems = CartItem.objects.filter(cart__user = currentUser)
+        if not currentCartItems:
+            return Response({"detail": "Cart is empty"}, status=400)
+
+        newOrder = Order(customer=currentUser)
         newOrder.save()
 
         for item in currentCartItems:

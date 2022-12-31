@@ -22,6 +22,7 @@ class GetCreateUserGroups(APIView):
     def post(self, request, *args, **kwargs):
         group = kwargs['group']
         userId = request.data['userId']
+        
         selectedUser = LittleLemonUser.objects.get(pk=userId)
         if(selectedUser == None):
             return Response({"detail": f'{userId} not found'}, status=400)
