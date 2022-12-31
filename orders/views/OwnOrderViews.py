@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from cart.models import CartItem
-from core.models import LittleLemonUser
-
+from rest_framework.generics import RetrieveDestroyAPIView
+from core.mixins import MultipleLookUpFieldMixin
 from orders.models import Order
 from orders.serializers import OrderSerializer
 import threading
@@ -13,8 +13,6 @@ class OwnOrdersGetCreateView(APIView):
 
     def get(self, request, *args, **kwargs):
         currentUserOrders = Order.objects.filter(customer__pk=request.user.id)
-        print(type(request.user))
-
         return Response(OrderSerializer.serialize(currentUserOrders, True))
 
     def deleteRelatedCartItems(self, items):
@@ -22,7 +20,6 @@ class OwnOrdersGetCreateView(APIView):
             item.delete()
         print("All items deleted")
 
-    # this request takes an avg of 11 seconds to complete bruh lmao fix it
     def post(self, request, *args, **kwargs):
         currentUser = request.user
 
@@ -34,9 +31,21 @@ class OwnOrdersGetCreateView(APIView):
             orderItem = item.toOrderItem(newOrder)
             orderItem.save()
 
-        deletionThread = threading.Thread(target=self.deleteRelatedCartItems, args=currentCartItems)
+        # user doesn't care about item deletion so we start it in a thread and return response
+        deletionThread = threading.Thread(target=self.deleteRelatedCartItems, args=[currentCartItems])
         deletionThread.start()
 
         return Response(OrderSerializer.serialize(newOrder), status=201)
         
+class OwnOrderSingleOperations(MultipleLookUpFieldMixin, RetrieveDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_fields = {
+        'userId': 'customer__pk',
+        'orderId': 'pk'
+    }
 
+    def get(self, request, *args, **kwargs):
+        self.kwargs['userId'] = request.user.id
+        return super().get(request, *args, **kwargs)

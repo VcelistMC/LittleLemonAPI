@@ -8,13 +8,21 @@ class MultipleLookUpFieldMixin(object):
     This mixin also allows using custom URL conf keywords
     The format of the lookup fields should be as follows 
     ```py
-    [
-        (urlKeyword, dbKeyword), 
-        ...
-    ]
+        {
+            urlKeyword: dbKeyword,
+            ...
+        } 
     ```
+    Example: To lookup an item by a userId and and orderId you would do something like this
+    ```py
+        lookup_fields = {
+            'userId': 'customer__pk',
+            'orderId': 'pk
+        }
     """
     lookup_fields = {}
+    
+
     def get_object(self):
         queryset = self.get_queryset()
         filter = {}
@@ -23,6 +31,7 @@ class MultipleLookUpFieldMixin(object):
                 filter[dbKeyword] = self.kwargs[urlKeyword]
             except Exception:
                 raise Exception(f'Expected to find {urlKeyword}')
+        
         obj = get_object_or_404(queryset, **filter)
         self.check_object_permissions(self.request, obj)
         return obj

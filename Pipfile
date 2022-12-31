@@ -10,6 +10,7 @@ djangorestframework = "*"
 bleach = "*"
 djoser = "*"
 djangorestframework-simplejwt = "~=5.2.1"
+django-debug-toolbar = "*"
 
 [dev-packages]
 

@@ -18,3 +18,10 @@ class IsManager(BasePermission):
 
         currentUser = LittleLemonUser.objects.get(pk=request.user.id)
         return currentUser.belongsToGroup(UserGroups.MANAGER) 
+
+class IsStaff(BasePermission):
+    def has_permission(self, request, view):
+        if request.user is None: raise exceptions.NotAuthenticated()
+
+        currentUser = LittleLemonUser.objects.get(pk=request.user.id)
+        return currentUser.belongsToGroup(UserGroups.MANAGER) or currentUser.belongsToGroup(UserGroups.DELIVERY_CREW)
