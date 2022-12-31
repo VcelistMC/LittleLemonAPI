@@ -6,6 +6,7 @@ from core.models import LittleLemonUser
 
 from orders.models import Order
 from orders.serializers import OrderSerializer
+import threading
 
 class OwnOrdersGetCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -15,6 +16,11 @@ class OwnOrdersGetCreateView(APIView):
         print(type(request.user))
 
         return Response(OrderSerializer.serialize(currentUserOrders, True))
+
+    def deleteRelatedCartItems(self, items):
+        for item in items:
+            item.delete()
+        print("All items deleted")
 
     # this request takes an avg of 11 seconds to complete bruh lmao fix it
     def post(self, request, *args, **kwargs):
@@ -27,8 +33,9 @@ class OwnOrdersGetCreateView(APIView):
         for item in currentCartItems:
             orderItem = item.toOrderItem(newOrder)
             orderItem.save()
-            item.delete()
-        
+
+        deletionThread = threading.Thread(target=self.deleteRelatedCartItems, args=currentCartItems)
+        deletionThread.start()
 
         return Response(OrderSerializer.serialize(newOrder), status=201)
         

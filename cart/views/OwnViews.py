@@ -42,7 +42,7 @@ class OwnCartItemSingleOpsView(MultipleLookUpFieldMixin,  RetrieveUpdateDestroyA
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [IsAuthenticated]
-    lookup_fields = [('userId', 'cart__user__pk'), ('pk', 'pk')]
+    lookup_fields = {'userId': 'cart__user__pk', 'pk': 'pk'}
 
     def get_object(self):
         self.kwargs['userId'] = self.request.user.id

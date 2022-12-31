@@ -14,11 +14,11 @@ class MultipleLookUpFieldMixin(object):
     ]
     ```
     """
-    lookup_fields = []
+    lookup_fields = {}
     def get_object(self):
         queryset = self.get_queryset()
         filter = {}
-        for urlKeyword, dbKeyword in self.lookup_fields:
+        for urlKeyword, dbKeyword in self.lookup_fields.items():
             try:
                 filter[dbKeyword] = self.kwargs[urlKeyword]
             except Exception:

@@ -45,5 +45,5 @@ class CartItemsSingleOpsView(MultipleLookUpFieldMixin, RetrieveUpdateDestroyAPIV
     queryset = CartItem.objects.all()
     permission_classes = [IsManager]
     serializer_class = CartItemSerializer
-    lookup_fields = [('itemId', 'pk'), ('cartId', 'cart__pk')]
+    lookup_fields = {'itemId': 'pk', 'cartId': 'cart__pk'}
 
