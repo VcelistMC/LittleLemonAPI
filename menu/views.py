@@ -1,14 +1,16 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from menu.filters import MenuItemFilter
+from core.mixins import FilterMixin
 from .models import Category, MenuItem
 from .serializers import CategorySerializer, MenuItemSerializer
 from core.permissions import ReadOnlyForNonManager
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 
 class CategoryListCreate(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [ReadOnlyForNonManager]
+    pagination_class = LimitOffsetPagination
 
 
 class CategorySingleOperations(RetrieveUpdateDestroyAPIView):
@@ -17,18 +19,15 @@ class CategorySingleOperations(RetrieveUpdateDestroyAPIView):
     permission_classes = [ReadOnlyForNonManager]
     
 
-class MenuListCreate(ListCreateAPIView):
+class MenuListCreate(FilterMixin, ListCreateAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     permission_classes = [ReadOnlyForNonManager]
-
-    def get(self, request, *args, **kwargs):
-        filter = MenuItemFilter()
-        items = filter.filter(request.query_params)
-        srialized_items = MenuItemSerializer(items, many=True)
-        return Response(srialized_items.data)
-
-
+    pagination_class = LimitOffsetPagination
+    filter_fields = {
+        "category": "category__title",
+        "title": "title__icontains"
+    }
 
 class MenuSingleOperations(RetrieveUpdateDestroyAPIView):
     queryset = MenuItem.objects.all()

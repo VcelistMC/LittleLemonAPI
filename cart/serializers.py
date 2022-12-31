@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from cart.models import Cart, CartItem
+from core.services import get_object_or_none
 from menu.models import MenuItem
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -27,24 +28,16 @@ class CartSerializer(serializers.ModelSerializer):
         return cartSerializer.data
 
 class CartItemPostRequestSerializer(serializers.Serializer):
-    itemId = serializers.IntegerField(required=True)
+    item = serializers.PrimaryKeyRelatedField(required=True, queryset=MenuItem.objects.all())
     quantity = serializers.IntegerField(required=True)
 
-    def validate_itemId(self, id):
-        get_object_or_404(MenuItem, pk=id)
-
-        return id
 
     def save(self, userId):
-        _itemId = self.validated_data['itemId']
+        _item = self.validated_data['item']
         _quantity = self.validated_data['quantity']
-
-        item = MenuItem.objects.get(pk=_itemId)
         currentCart, _ = Cart.objects.get_or_create(user__id=userId)
-
-        createdItem = CartItem(cart=currentCart, menuItem=item, quantity=_quantity)
+        createdItem = CartItem(cart=currentCart, menuItem=_item, quantity=_quantity)
         createdItem.save()
-
         return createdItem
 
     

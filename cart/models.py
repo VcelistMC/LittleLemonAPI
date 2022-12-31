@@ -1,6 +1,7 @@
 from django.db import models
 from menu.models import MenuItem
 from core.models import LittleLemonUser
+from orders.models import OrderItem
 
 class Cart(models.Model):
     user = models.ForeignKey(LittleLemonUser, on_delete=models.CASCADE)
@@ -29,3 +30,10 @@ class CartItem(models.Model):
 
     def __str__(self) -> str:
         return f'{self.quantity}x {self.menuItem}'
+
+    def toOrderItem(self, order):
+        return OrderItem(
+            order=order, 
+            menuItem=self.menuItem, 
+            quantity=self.quantity
+        )
