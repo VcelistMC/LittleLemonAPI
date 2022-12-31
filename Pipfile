@@ -11,6 +11,9 @@ bleach = "*"
 djoser = "*"
 djangorestframework-simplejwt = "~=5.2.1"
 django-debug-toolbar = "*"
+pyyaml = "*"
+uritemplate = "*"
+django-rest-swagger = "*"
 
 [dev-packages]
 
